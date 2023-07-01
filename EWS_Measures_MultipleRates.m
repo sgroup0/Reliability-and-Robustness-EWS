@@ -76,7 +76,7 @@ TT_mu(1) = Transition_time_transient_removed(1) * Rates(1);
 %Create table for this data
 Check_table = table(Rates, Transient_time, Overlap_ratio, Window_size, Guess_WS, Transition_time, Transition_time_transient_removed, percentage_WS, AC_redline, H_redline, TT_mu, Guess_TT);
 
-for i = 1: 49%length(mu_list)
+for i = 1: length(mu_list)
 
     fprintf('i = %d\n', i);
     
@@ -152,19 +152,40 @@ for i = 1: 49%length(mu_list)
 
 end
 
+% Assign values to structures to give them as inputs to functions
+H_list_maxima.var = H_list_var_maxima;
+H_list_maxima.sk = H_list_sk_maxima;
+H_list_maxima.kr = H_list_kr_maxima;
+H_list_maxima.AC = H_list_AC_maxima;
+H_list_maxima.H = H_list_H_maxima;
+
+p_list_maxima.var = p_list_var_maxima;
+p_list_maxima.sk = p_list_sk_maxima;
+p_list_maxima.kr = p_list_kr_maxima;
+p_list_maxima.AC = p_list_AC_maxima;
+p_list_maxima.H = p_list_H_maxima;
+
 
 %% PLOT P-VALUES CHANGE WITH RATE OF CHANGE OF PARAMETER FOR DIFFERENT EWS MEASURES
 
-Pvalue_Plot_Bifn_TiledLayout
-Pvalue_Plot_Maxrate_TiledLayout
-Pvalue_Plot_Maxima_TiledLayout
-Pvalue_Plot_Maxima_TiledLayout_NoSignificanceLine
+% Pvalue_Plot_Bifn_TiledLayout
+% Pvalue_Plot_Maxrate_TiledLayout
 
-% Save the figures
-for i = 1: figure_counter
-    figure_name = sprintf('Figures/Pvalue_Plot%d.fig', i);
-    saveas(figure(i), figure_name);
-end
+% Print till maxima with significance line
+significance_line_print_bool = 1;
+figure_counter = Pvalue_Plot_Maxima_TiledLayout(H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+% Print till maxima without significance line
+significance_line_print_bool = 0;
+figure_counter = Pvalue_Plot_Maxima_TiledLayout(H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+
+
+%% SAVE THE FIGURES
+
+% for i = 1: figure_counter
+%     figure_name = sprintf('Figures/Pvalue_Plot%d.fig', i);
+%     saveas(figure(i), figure_name);
+% end
+
 
 
 
@@ -213,7 +234,7 @@ t2 = t2_list(rate_idx);
 time_bifn = (Pm_bifn - Pm0) / mu;
 
 % Load timeseries
-filename = sprintf('Data/Noise5/NoiseOmega5_delta%.2f_omega%.2f_E%.2f_Pm%.4f_mu%.5f_t%.2f_deltaT%.5f_ConstantTimeStep.mat', delta0, omega0, E0, Pm0, mu, t2, delta_t);
+filename = sprintf('../Data/Noise5/NoiseOmega5_delta%.2f_omega%.2f_E%.2f_Pm%.4f_mu%.5f_t%.2f_deltaT%.5f_ConstantTimeStep.mat', delta0, omega0, E0, Pm0, mu, t2, delta_t);
 Data = load(filename);
 
 tSol = Data.tSol;
