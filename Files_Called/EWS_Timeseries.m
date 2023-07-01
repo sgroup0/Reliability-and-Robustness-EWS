@@ -202,7 +202,7 @@ TS_gen_total_time = a + b + c + d + e + f + g;
 % fprintf("e = %f\n", e);
 % fprintf("f = %f\n", f);
 % fprintf("g = %f\n", g);
-fprintf("TS_gen_total_time = %f\n", TS_gen_total_time);
+% fprintf("TS_gen_total_time = %f\n", TS_gen_total_time);
 
 
 end

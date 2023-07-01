@@ -1,4 +1,10 @@
-function figure_counter = Pvalue_Plot_Maxima_TiledLayout(H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter)
+function figure_counter = Pvalue_Plot_Maxima_TiledLayout(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter)
+
+%% INITIAL SETUP
+
+PS = PLOT_STANDARDS();
+
+
 %% GET THE DATA TO PLOT
 
 H_list_var_maxima = H_list_maxima.var;

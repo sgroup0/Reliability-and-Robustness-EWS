@@ -93,6 +93,7 @@ Check_table = table(Rates, Transient_time, Overlap_ratio, Window_size, Guess_WS,
 
 
 for k = 1: n
+    tic_loop_start = tic;
     fprintf('k = %d\n', k);
 
     for i = 1: length(mu_list)
@@ -170,6 +171,9 @@ for k = 1: n
     
     end
 
+    loop_time = toc(tic_loop_start);
+    fprintf('\n');
+    fprintf('%.2f\n', loop_time);
     fprintf('\n');
 
 
@@ -223,10 +227,17 @@ p_list_maxima.H = p_list_H_maxima_avg;
 
 % Print till maxima with significance line
 significance_line_print_bool = 1;
-figure_counter = Pvalue_Plot_Maxima_TiledLayout(H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+figure_counter = Pvalue_Plot_Maxima_TiledLayout(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
 % Print till maxima without significance line
 significance_line_print_bool = 0;
-figure_counter = Pvalue_Plot_Maxima_TiledLayout(H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+figure_counter = Pvalue_Plot_Maxima_TiledLayout(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+
+% Print till maxima with significance line
+significance_line_print_bool = 1;
+figure_counter = Pvalue_Plot_Maxima_TiledLayout_OnlyH1(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+% Print till maxima without significance line
+significance_line_print_bool = 0;
+figure_counter = Pvalue_Plot_Maxima_TiledLayout_OnlyH1(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
 
 
 %% SAVE THE FIGURES
@@ -497,28 +508,48 @@ significance_value_ac = 0.05;
 gpu_shift_critical_size = 520;
 print_bool = 0;
 
+default_mmk_assign = 0;
+
 time_ktau_bifn = time_window_ends_bifn;
 
+if length(time_ktau_bifn) > 5
 % Calculate Kendall-tau and determine whether to reject or retain null hypothesis
-[tau_bifn.rms, z_bifn.rms, p_bifn.rms, H_bifn.rms] = Modified_MannKendall_test(time_ktau_bifn, rms_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_bifn.var, z_bifn.var, p_bifn.var, H_bifn.var] = Modified_MannKendall_test(time_ktau_bifn, var_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_bifn.sk, z_bifn.sk, p_bifn.sk, H_bifn.sk] = Modified_MannKendall_test(time_ktau_bifn, sk_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_bifn.kr, z_bifn.kr, p_bifn.kr, H_bifn.kr] = Modified_MannKendall_test(time_ktau_bifn, kr_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-
-[tau_bifn.AC, z_bifn.AC, p_bifn.AC, H_bifn.AC] = Modified_MannKendall_test(time_ktau_bifn, AC_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_bifn.H, z_bifn.H, p_bifn.H, H_bifn.H] = Modified_MannKendall_test(time_ktau_bifn, H_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_bifn.rms, z_bifn.rms, p_bifn.rms, H_bifn.rms] = Modified_MannKendall_test(time_ktau_bifn, rms_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_bifn.var, z_bifn.var, p_bifn.var, H_bifn.var] = Modified_MannKendall_test(time_ktau_bifn, var_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_bifn.sk, z_bifn.sk, p_bifn.sk, H_bifn.sk] = Modified_MannKendall_test(time_ktau_bifn, sk_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_bifn.kr, z_bifn.kr, p_bifn.kr, H_bifn.kr] = Modified_MannKendall_test(time_ktau_bifn, kr_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    
+    [tau_bifn.AC, z_bifn.AC, p_bifn.AC, H_bifn.AC] = Modified_MannKendall_test(time_ktau_bifn, AC_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_bifn.H, z_bifn.H, p_bifn.H, H_bifn.H] = Modified_MannKendall_test(time_ktau_bifn, H_timeseries_bifn, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+else
+    tau_bifn.rms = default_mmk_assign; z_bifn.rms = default_mmk_assign; p_bifn.rms = default_mmk_assign; H_bifn.rms = default_mmk_assign;
+    tau_bifn.var = default_mmk_assign; z_bifn.var = default_mmk_assign; p_bifn.var = default_mmk_assign; H_bifn.var = default_mmk_assign;
+    tau_bifn.sk = default_mmk_assign; z_bifn.sk = default_mmk_assign; p_bifn.sk = default_mmk_assign; H_bifn.sk = default_mmk_assign;
+    tau_bifn.kr = default_mmk_assign; z_bifn.kr = default_mmk_assign; p_bifn.kr = default_mmk_assign; H_bifn.kr = default_mmk_assign;
+    tau_bifn.AC = default_mmk_assign; z_bifn.AC = default_mmk_assign; p_bifn.AC = default_mmk_assign; H_bifn.AC = default_mmk_assign;
+    tau_bifn.H = default_mmk_assign; z_bifn.H = default_mmk_assign; p_bifn.H = default_mmk_assign; H_bifn.H = default_mmk_assign;
+end
 
 % Calculate Kendall-tau for EWS timeseries till max rate of change of rms
 time_ktau_maxrate = time_window_ends_maxrate;
 
+if length(time_ktau_maxrate) > 5
 % Calculate Kendall-tau and determine whether to reject or retain null hypothesis
-[tau_maxrate.rms, z_maxrate.rms, p_maxrate.rms, H_maxrate.rms] = Modified_MannKendall_test(time_ktau_maxrate, rms_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_maxrate.var, z_maxrate.var, p_maxrate.var, H_maxrate.var] = Modified_MannKendall_test(time_ktau_maxrate, var_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_maxrate.sk, z_maxrate.sk, p_maxrate.sk, H_maxrate.sk] = Modified_MannKendall_test(time_ktau_maxrate, sk_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_maxrate.kr, z_maxrate.kr, p_maxrate.kr, H_maxrate.kr] = Modified_MannKendall_test(time_ktau_maxrate, kr_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-
-[tau_maxrate.AC, z_maxrate.AC, p_maxrate.AC, H_maxrate.AC] = Modified_MannKendall_test(time_ktau_maxrate, AC_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
-[tau_maxrate.H, z_maxrate.H, p_maxrate.H, H_maxrate.H] = Modified_MannKendall_test(time_ktau_maxrate, H_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_maxrate.rms, z_maxrate.rms, p_maxrate.rms, H_maxrate.rms] = Modified_MannKendall_test(time_ktau_maxrate, rms_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_maxrate.var, z_maxrate.var, p_maxrate.var, H_maxrate.var] = Modified_MannKendall_test(time_ktau_maxrate, var_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_maxrate.sk, z_maxrate.sk, p_maxrate.sk, H_maxrate.sk] = Modified_MannKendall_test(time_ktau_maxrate, sk_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_maxrate.kr, z_maxrate.kr, p_maxrate.kr, H_maxrate.kr] = Modified_MannKendall_test(time_ktau_maxrate, kr_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    
+    [tau_maxrate.AC, z_maxrate.AC, p_maxrate.AC, H_maxrate.AC] = Modified_MannKendall_test(time_ktau_maxrate, AC_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+    [tau_maxrate.H, z_maxrate.H, p_maxrate.H, H_maxrate.H] = Modified_MannKendall_test(time_ktau_maxrate, H_timeseries_maxrate, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
+else
+    tau_maxrate.rms = default_mmk_assign; z_maxrate.rms = default_mmk_assign; p_maxrate.rms = default_mmk_assign; H_maxrate.rms = default_mmk_assign;
+    tau_maxrate.var = default_mmk_assign; z_maxrate.var = default_mmk_assign; p_maxrate.var = default_mmk_assign; H_maxrate.var = default_mmk_assign;
+    tau_maxrate.sk = default_mmk_assign; z_maxrate.sk = default_mmk_assign; p_maxrate.sk = default_mmk_assign; H_maxrate.sk = default_mmk_assign;
+    tau_maxrate.kr = default_mmk_assign; z_maxrate.kr = default_mmk_assign; p_maxrate.kr = default_mmk_assign; H_maxrate.kr = default_mmk_assign;
+    tau_maxrate.AC = default_mmk_assign; z_maxrate.AC = default_mmk_assign; p_maxrate.AC = default_mmk_assign; H_maxrate.AC = default_mmk_assign;
+    tau_maxrate.H = default_mmk_assign; z_maxrate.H = default_mmk_assign; p_maxrate.H = default_mmk_assign; H_maxrate.H = default_mmk_assign;
+end
 
 % Calculate Kendall-tau for AC and H till their maxima
 time_ktau_varmaxima = time_window_ends_varmaxima;
@@ -526,8 +557,6 @@ time_ktau_skmaxima = time_window_ends_skmaxima;
 time_ktau_krmaxima = time_window_ends_krmaxima;
 time_ktau_ACmaxima = time_window_ends_ACmaxima;
 time_ktau_Hmaxima = time_window_ends_Hmaxima;
-
-default_mmk_assign = 0;
 
 if length(time_ktau_varmaxima) > 5
     [tau_maxima.var, z_maxima.var, p_maxima.var, H_maxima.var] = Modified_MannKendall_test(time_ktau_varmaxima, var_timeseries_maxima, significance_value_tau, significance_value_ac, gpu_shift_critical_size, print_bool);
