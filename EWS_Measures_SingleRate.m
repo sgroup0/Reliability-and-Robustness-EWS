@@ -53,7 +53,7 @@ t2 = t2_list(n);
 time_bifn = (Pm_bifn - Pm0) / mu;
 
 % Load timeseries
-filename = sprintf('Data/Noise5/NoiseOmega5_delta%.2f_omega%.2f_E%.2f_Pm%.4f_mu%.5f_t%.2f_deltaT%.5f_ConstantTimeStep.mat', delta0, omega0, E0, Pm0, mu, t2, delta_t);
+filename = sprintf('../Data/Noise5/NoiseOmega5_delta%.2f_omega%.2f_E%.2f_Pm%.4f_mu%.5f_t%.2f_deltaT%.5f_ConstantTimeStep.mat', delta0, omega0, E0, Pm0, mu, t2, delta_t);
 Data = load(filename);
 
 tSol = Data.tSol;
