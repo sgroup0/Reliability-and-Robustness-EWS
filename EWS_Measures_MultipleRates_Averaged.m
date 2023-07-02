@@ -95,10 +95,10 @@ Check_table = table(Rates, Transient_time, Overlap_ratio, Window_size, Guess_WS,
 for k = 1: n
     tic_loop_start = tic;
     fprintf('k = %d\n', k);
-
+    fprintf('i = ');
     for i = 1: length(mu_list)
         
-        fprintf('i = %d, ', i);
+        fprintf('%d, ', i);
         
         % Fix the function inputs
         time_transient = Check_table.Transient_time(i);
@@ -242,10 +242,10 @@ figure_counter = Pvalue_Plot_Maxima_TiledLayout_OnlyH1(mu_list, H_list_maxima, p
 
 %% SAVE THE FIGURES
 
-% for i = 1: figure_counter
-%     figure_name = sprintf('Figures/Pvalue_Plot%d.fig', i);
-%     saveas(figure(i), figure_name);
-% end
+for i = 1: figure_counter
+    figure_name = sprintf('Figures/Pvalue_Plot%d.fig', i);
+    saveas(figure(i), figure_name);
+end
 
 
 
