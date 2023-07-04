@@ -240,12 +240,21 @@ significance_line_print_bool = 0;
 figure_counter = Pvalue_Plot_Maxima_TiledLayout_OnlyH1(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
 
 
-%% SAVE THE FIGURES
+%% 
+% Print till maxima with significance line
+significance_line_print_bool = 1;
+figure_counter = Pvalue_Plot_Maxima_TiledLayout(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
+
+
+%% SAVE THE FIGURES AND WORKSPACE
 
 for i = 1: figure_counter
     figure_name = sprintf('Figures/Pvalue_Plot%d.fig', i);
     saveas(figure(i), figure_name);
 end
+
+% Save workspace
+save('Figures/Workspace_GeneratedData');
 
 
 
