@@ -27,7 +27,8 @@ line_width = 1.5;
 % Var
 figure_counter = figure_counter + 1;
 figure(figure_counter);
-tiledlayout('flow');
+% tiledlayout('flow');
+tiledlayout(5, 1);
 nexttile;
 
 % If H == 1 that is positive slope then plot green dot

@@ -68,7 +68,7 @@ H_list_H_maxima_avg = zeros(1, length(mu_list));
 
 % Table of data to be kept track of
 Rates = mu_list';
-Transient_time = 16 * ones(size(Rates));
+Transient_time = 0 * ones(size(Rates));
 Overlap_ratio = (99 / 100) * ones(size(Rates));
 Window_size = zeros(size(Rates));
 Guess_WS = zeros(size(Rates));
@@ -238,12 +238,6 @@ figure_counter = Pvalue_Plot_Maxima_TiledLayout_OnlyH1(mu_list, H_list_maxima, p
 % Print till maxima without significance line
 significance_line_print_bool = 0;
 figure_counter = Pvalue_Plot_Maxima_TiledLayout_OnlyH1(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
-
-
-%% 
-% Print till maxima with significance line
-significance_line_print_bool = 1;
-figure_counter = Pvalue_Plot_Maxima_TiledLayout(mu_list, H_list_maxima, p_list_maxima, significance_value_tau, significance_line_print_bool, figure_counter);
 
 
 %% SAVE THE FIGURES AND WORKSPACE
